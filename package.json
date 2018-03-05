@@ -40,6 +40,7 @@
     "nodemailer-markdown": "1.x.x",
     "object-assign": "4.x.x",
     "react": "15.x.x",
+    "react-datepicker": "^1.2.1",
     "react-helmet": "5.x.x",
     "redux": "3.x.x",
     "slug": "0.9.x",
@@ -55,6 +56,7 @@
     "bootstrap": "3.x.x",
     "code": "4.x.x",
     "cookie": "0.3.x",
+    "css-loader": "^0.28.10",
     "del": "3.x.x",
     "eslint-config-hapi": "10.x.x",
     "eslint-plugin-react": "7.x.x",
@@ -69,6 +71,7 @@
     "gulp-rename": "1.x.x",
     "gulp-sourcemaps": "2.x.x",
     "gulp-util": "3.x.x",
+    "jquery": "^3.3.1",
     "jsdom": "11.x.x",
     "lab": "14.x.x",
     "lodash": "4.x.x",
@@ -82,6 +85,7 @@
     "react-dom": "15.x.x",
     "react-router-dom": "4.x.x",
     "require-dir": "0.3.x",
+    "style-loader": "^0.20.2",
     "webpack": "3.x.x",
     "xhr": "2.x.x"
   }

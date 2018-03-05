@@ -41,8 +41,8 @@ const config = {
             uri: {
                 $filter: 'env',
                 production: process.env.MONGODB_URI,
-                test: 'mongodb://localhost:27017/aqua-test',
-                $default: 'mongodb://localhost:27017/aqua'
+                test: 'mongodb://alex:password123@ds151528.mlab.com:51528/aqua-quiz',
+                $default: 'mongodb://alex:password123@ds151528.mlab.com:51528/aqua-quiz'
             }
         },
         autoIndex: true
@@ -52,7 +52,7 @@ const config = {
         port: 465,
         secure: true,
         auth: {
-            user: 'jedireza@gmail.com',
+            user: 'obulten22@gmail.com',
             pass: process.env.SMTP_PASSWORD
         }
     },

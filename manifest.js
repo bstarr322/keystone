@@ -75,7 +75,8 @@ const manifest = {
                         AuthAttempt: './server/models/auth-attempt',
                         Session: './server/models/session',
                         Status: './server/models/status',
-                        User: './server/models/user'
+                        User: './server/models/user',
+                        Question: './server/models/question'
                     },
                     autoIndex: Config.get('/hapiMongoModels/autoIndex')
                 }
@@ -155,6 +156,12 @@ const manifest = {
         },
         {
             plugin: './server/api/users',
+            options: {
+                routes: { prefix: '/api' }
+            }
+        },
+        {
+            plugin: './server/api/questions',
             options: {
                 routes: { prefix: '/api' }
             }

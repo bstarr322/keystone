@@ -21,6 +21,20 @@ internals.applyRoutes = function (server, next) {
         }
     });
 
+    server.route({
+        method: 'GET',
+        path: '/questions/{glob*}',
+        config: {
+            auth: {
+                strategy: 'session',
+                scope: ['admin', 'account']
+            }
+        },
+        handler: function (request, reply) {
+
+            reply.view('account/index');
+        }
+    });
 
     next();
 };
