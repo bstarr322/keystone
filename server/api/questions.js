@@ -49,7 +49,7 @@ internals.applyRoutes = function (server, next) {
       	query.$or.push({summary: new RegExp('^.*?' + EscapeRegExp(request.query.keyword) + '.*$', 'i')});
       	query.$or.push({"answers.answer_speak": new RegExp('^.*?' + EscapeRegExp(request.query.keyword) + '.*$', 'i')});
       	query.$or.push({"answers.affirmation": new RegExp('^.*?' + EscapeRegExp(request.query.keyword) + '.*$', 'i')});
-        // query.question = new RegExp('^.*?' + EscapeRegExp(request.query.keyword) + '.*$', 'i');
+      	query.$or.push({ "answers.alt_answers": new RegExp('^.*?' + EscapeRegExp(request.query.keyword) + '.*$', 'i') });
       }
 
       Question.pagedFind(query, fields, sort, limit, page, (err, results) => {
@@ -75,7 +75,7 @@ internals.applyRoutes = function (server, next) {
           question: Joi.string().required(),
 			    type: Joi.string().required(),
 			    topic: Joi.string().required(),
-			    date: Joi.date(),
+			    date: Joi.string().required(),
 			    answers: Joi.array().min(2),
 			    provider: Joi.object(), 
 			    active: Joi.boolean().required(),

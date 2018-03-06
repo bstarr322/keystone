@@ -57,18 +57,23 @@ class EditQuestion extends React.Component {
     question.question = $('#question').val();
     question.type = $('#type').val();
     question.topic = $('#topic').val();
-    question.date = $('#date').val();
+    let date = (this.state.startDate === null ? this.state.data.current_question.date : this.state.startDate)
+    question.date = moment(date).format("YYYY-MM-DD");
     
     question.answers = [];
     let num_answers = $('.panel.each-answer').length;
     for (var i = 0; i < num_answers; i++) {
+      let follow_up = $(".panel.each-answer").eq(i).find("select.follow_up").val();
+      if (follow_up == null) {
+        follow_up = '';
+      }
       let answer = {
         answer: $(".panel.each-answer").eq(i).find('input.answer').val(),
         correct: $(".panel.each-answer").eq(i).find("input.correct").prop('checked'),
         affirmation: $(".panel.each-answer").eq(i).find('input.affirmation').val(),
         answer_speak: $(".panel.each-answer").eq(i).find('input.answer_speak').val(),
         calculated: $(".panel.each-answer").eq(i).find("input.calculated").prop('checked'),
-        follow_up: $(".panel.each-answer").eq(i).find("select.follow_up").val(),
+        follow_up: follow_up,
         alt_answers: $(".panel.each-answer").eq(i).find('.each input').map(function(idx, elem) { return $(elem).val(); }).get()
       }
 
@@ -107,6 +112,14 @@ class EditQuestion extends React.Component {
 
     if (question['answers'].length < 2) {
       errors.push('Answers should be more than 1'); 
+    }
+
+    if (question['correct_answers'] > question['total_answers']) {
+      errors.push('Total answers should be bigger than correct answers'); 
+    }
+
+    if (question['difficulty'] > 1) {
+      errors.push('Difficulty should be less than 1'); 
     }
 
     if (errors.length == 0) {
@@ -187,13 +200,29 @@ class EditQuestion extends React.Component {
   render() {
     let checkQuiz = (!this.state.data.loading && (this.state.data.current_question != null) && (this.state.data.user != null));
     let answers = null;
+    let type = null;
     let topic = null;
     let date = null;
     let multiple_choice = null;
+    let provider = null;
+    let active = null;
+    let test = null;
     let locales = null;
+    let points = null;
+    let headline = null;
+    let location = null;
+    let order = null;
+    let summary = null;
+    let difficulty = null;
+    let total_answers = null;
+    let question_number = null;
     let correct_answers = null;
+    
     if (checkQuiz) {
       let _this = this;
+      type = <select className="form-control" id="type" name="question.type" defaultValue={this.state.data.current_question.type}>
+            <option value="question">question</option>
+          </select>;
 
       topic = <select className="form-control" id="topic" name="question.topic" defaultValue={this.state.data.current_question.topic}>
             <option value="history">history</option>
@@ -267,12 +296,95 @@ class EditQuestion extends React.Component {
         </div>);  
       });
 
+      provider = <div className="panel form-inline answer">
+          <div className="form-group">
+            <label htmlFor="difficulty">Difficulty</label>
+            <select className="form-control" name="question.provider.difficulty" defaultValue={this.state.data.current_question.provider.difficulty}>
+              <option value="Easy">Easy</option>
+              <option value="Medium">Medium</option>
+              <option value="Hard">Hard</option>
+            </select>
+          </div>
+          <br />
+          <div className="form-group">
+            <label htmlFor="zone">Zone</label>
+            <select className="form-control" name="question.provider.zone" defaultValue={this.state.data.current_question.provider.zone}>
+              <option value="History">History</option>
+              <option value="Music">Music</option>
+              <option value="World Trivia">World Trivia</option>
+              <option value="General Knowledge">General Knowledge</option>
+              <option value="Sports">Sports</option>
+              <option value="Sports (US)">Sports (US)</option>
+              <option value="Current Affairs">Current Affairs</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Movies">Movies</option>
+              <option value="Movies & TV">Movies & TV</option>
+              <option value="Pop Culture">Pop Culture</option>
+              <option value="General Wisdom">General Wisdom</option>
+              <option value="Technology">Technology</option>
+            </select>
+          </div>
+          <br />
+          <div className="form-group">
+            <label htmlFor="name">Name</label>
+            <input type="text" className="form-control" id="name" name="question.provider.name" defaultValue={this.state.data.current_question.provider.name} />
+          </div>
+          <br />
+          <div className="form-group">
+            <label htmlFor="category">Category</label>
+            <select className="form-control" name="question.provider.category" defaultValue={this.state.data.current_question.provider.category}>
+              <option value="History">History</option>
+              <option value="Music">Music</option>
+              <option value="World Trivia">World Trivia</option>
+              <option value="General Knowledge">General Knowledge</option>
+              <option value="Sports">Sports</option>
+              <option value="Sports (US)">Sports (US)</option>
+              <option value="Current Affairs">Current Affairs</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Movies">Movies</option>
+              <option value="Movies & TV">Movies & TV</option>
+              <option value="Pop Culture">Pop Culture</option>
+              <option value="General Wisdom">General Wisdom</option>
+              <option value="Technology">Technology</option>
+            </select>
+          </div>
+          <br />
+          <div className="form-group">
+            <label htmlFor="sub_category">Subcategory</label>
+            <input type="text" className="form-control" id="sub_category" name="question.provider.sub_category" defaultValue={this.state.data.current_question.provider.sub_category} />
+          </div>
+        </div>;
+
+      active = <input type="checkbox" name="question.active" defaultChecked={this.state.data.current_question.active} />;
+      test = <input type="checkbox" name="question.test" defaultChecked={this.state.data.current_question.test} />;
+
       locales = <select className="form-control" name="question.locales[]" multiple="true" defaultValue={this.state.data.current_question.locales} >
           <option value="en-US">en-US</option>
           <option value="en-GB">en-GB</option>
           <option value="en-CA">en-CA</option>
           <option value="en-AU">en-AU</option>
         </select>;
+
+      points = <select className="form-control" name="question.points" defaultValue={this.state.data.current_question.points}>
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+        </select>;
+      headline = <input type="text" className="form-control" name="question.headline" defaultValue={this.state.data.current_question.headline} />;
+      location = <input type="text" className="form-control" name="question.location" defaultValue={this.state.data.current_question.location} />;
+      order = <input type="text" className="form-control" name="question.order" defaultValue={this.state.data.current_question.order} />;
+      summary = <input type="text" className="form-control" name="question.summary" defaultValue={this.state.data.current_question.summary} />;
+      difficulty = <input type="number" className="form-control" name="question.difficulty" min="0" defaultValue={this.state.data.current_question.difficulty} />;
+      total_answers = <input type="number" className="form-control" name="question.total_answers" min="0" defaultValue={this.state.data.current_question.total_answers} />;
+      question_number = <input type="number" className="form-control" name="question.question_number" min="0" defaultValue={this.state.data.current_question.question_number} />;
 
       correct_answers = <input type="number" className="form-control" name="question.correct_answers" min="0" defaultValue={this.state.data.current_question.correct_answers} />;
     }
@@ -296,9 +408,7 @@ class EditQuestion extends React.Component {
 
           <div className="form-group">
             <label htmlFor="type">Type</label>
-            <select className="form-control" id="type" name="question.type" defaultValue={checkQuiz ? this.state.data.current_question.type:'question'}>
-              <option value="question">question</option>
-            </select>
+            {type}
           </div>
 
           <div className="form-group">
@@ -324,74 +434,19 @@ class EditQuestion extends React.Component {
           <hr />
           <div className="form-group">
             <label htmlFor="provider">Provider</label>
-            <div className="panel form-inline answer">
-              <div className="form-group">
-                <label htmlFor="difficulty">Difficulty</label>
-                <select className="form-control" name="question.provider.difficulty" defaultValue={checkQuiz ? this.state.data.current_question.provider.difficulty:"Medium"}>
-                  <option value="Easy">Easy</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Hard">Hard</option>
-                </select>
-              </div>
-              <br />
-              <div className="form-group">
-                <label htmlFor="zone">Zone</label>
-                <select className="form-control" name="question.provider.zone" defaultValue={checkQuiz ? this.state.data.current_question.provider.zone:"History"}>
-                  <option value="History">History</option>
-                  <option value="Music">Music</option>
-                  <option value="World Trivia">World Trivia</option>
-                  <option value="General Knowledge">General Knowledge</option>
-                  <option value="Sports">Sports</option>
-                  <option value="Sports (US)">Sports (US)</option>
-                  <option value="Current Affairs">Current Affairs</option>
-                  <option value="Entertainment">Entertainment</option>
-                  <option value="Movies">Movies</option>
-                  <option value="Movies & TV">Movies & TV</option>
-                  <option value="Pop Culture">Pop Culture</option>
-                  <option value="General Wisdom">General Wisdom</option>
-                  <option value="Technology">Technology</option>
-                </select>
-              </div>
-              <br />
-              <div className="form-group">
-                <label htmlFor="name">Name</label>
-                <input type="text" className="form-control" id="name" name="question.provider.name" defaultValue={checkQuiz ? this.state.data.current_question.provider.name:"Trivia Group"} />
-              </div>
-              <br />
-              <div className="form-group">
-                <label htmlFor="category">Category</label>
-                <select className="form-control" name="question.provider.category" defaultValue={checkQuiz ? this.state.data.current_question.provider.category:"History"}>
-                  <option value="History">History</option>
-                  <option value="Music">Music</option>
-                  <option value="World Trivia">World Trivia</option>
-                  <option value="General Knowledge">General Knowledge</option>
-                  <option value="Sports">Sports</option>
-                  <option value="Sports (US)">Sports (US)</option>
-                  <option value="Current Affairs">Current Affairs</option>
-                  <option value="Entertainment">Entertainment</option>
-                  <option value="Movies">Movies</option>
-                  <option value="Movies & TV">Movies & TV</option>
-                  <option value="Pop Culture">Pop Culture</option>
-                  <option value="General Wisdom">General Wisdom</option>
-                  <option value="Technology">Technology</option>
-                </select>
-              </div>
-              <br />
-              <div className="form-group">
-                <label htmlFor="sub_category">Subcategory</label>
-                <input type="text" className="form-control" id="sub_category" name="question.provider.sub_category" defaultValue={checkQuiz ? this.state.data.current_question.provider.sub_category:''} />
-              </div>
-            </div>
+            {provider}
           </div>
           <hr />
           <div className="checkbox">
             <label>
-              <input type="checkbox" name="question.active" defaultChecked={checkQuiz ? this.state.data.current_question.active:false} />Active?
+              {active}
+              Active?
             </label>
           </div>
           <div className="checkbox">
             <label>
-              <input type="checkbox" name="question.test" defaultChecked={checkQuiz ? this.state.data.current_question.test:false} />Test?
+              {test}
+              Test?
             </label>
           </div>
           <div className="form-group">
@@ -400,48 +455,36 @@ class EditQuestion extends React.Component {
           </div>
           <div className="form-group">
             <label htmlFor="points">points</label>
-            <select className="form-control" name="question.points" defaultValue={checkQuiz ? this.state.data.current_question.points:5}>
-              <option value="0">0</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
-              <option value="10">10</option>
-            </select>
+            {points}
           </div>
           <div className="form-group">
             <label htmlFor="headline">Headline</label>
-            <input type="text" className="form-control" name="question.headline" defaultValue={checkQuiz ? this.state.data.current_question.headline:''} />
+            {headline}
           </div>
           <div className="form-group">
             <label htmlFor="location">Location</label>
-            <input type="text" className="form-control" name="question.location" defaultValue={checkQuiz ? this.state.data.current_question.location:''} />
+            {location}
           </div>
           <div className="form-group">
             <label htmlFor="order">Order</label>
-            <input type="text" className="form-control" name="question.order" defaultValue={checkQuiz ? this.state.data.current_question.order:''} />
+            {order}
           </div>
           <div className="form-group">
             <label htmlFor="summary">Summary</label>
-            <input type="text" className="form-control" name="question.summary" defaultValue={checkQuiz ? this.state.data.current_question.summary:''} />
+            {summary}
           </div>
 
           <div className="form-group">
             <label htmlFor="difficulty">Difficulty</label>
-            <input type="number" className="form-control" name="question.difficulty" min="0" defaultValue={checkQuiz ? this.state.data.current_question.difficulty:''} />
+            {difficulty}
           </div>
           <div className="form-group">
             <label htmlFor="total_answers">Total Answers</label>
-            <input type="number" className="form-control" name="question.total_answers" min="0" defaultValue={checkQuiz ? this.state.data.current_question.total_answers:''} />
+            {total_answers}
           </div>
           <div className="form-group">
             <label htmlFor="question_number">Quetion Number</label>
-            <input type="number" className="form-control" name="question.question_number" min="0" defaultValue={checkQuiz ? this.state.data.current_question.question_number:''} />
+            {question_number}
           </div>
           <div className="form-group">
             <label htmlFor="correct_answers">Correct Answers</label>

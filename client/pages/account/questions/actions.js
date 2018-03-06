@@ -28,8 +28,8 @@ class Actions {
 
           if (!err) {
               // this.hideCreateNew();
-
-              const path = `/questions/${response._id}`;
+              // const path = `/questions/${response._id}`;
+              const path = `/questions`;
               history.push(path);
 
               window.scrollTo(0, 0);
@@ -78,7 +78,7 @@ class Actions {
         Constants.DELETE_RESPONSE,
         (err, response) => {
           if (!err) {
-            // history.push('/questions');
+            history.push('/questions');
 
             window.scrollTo(0, 0);
           }

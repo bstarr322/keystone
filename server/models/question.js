@@ -15,7 +15,7 @@ Question.schema = Joi.object().keys({
     question: Joi.string().required(),
     type: Joi.string().required().default('question'),
     topic: Joi.string().required().default('history'),
-    date: Joi.date(),
+    date: Joi.string().required(),
     answers: Joi.array().items(
         Joi.object({
             answer: Joi.string().required().default('a'),

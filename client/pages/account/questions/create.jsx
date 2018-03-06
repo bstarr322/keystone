@@ -55,18 +55,22 @@ class CreateQuestion extends React.Component {
       question.question = $('#question').val();
       question.type = $('#type').val();
       question.topic = $('#topic').val();
-      question.date = $('#date').val();
+      question.date = moment(this.state.startDate).format("YYYY-MM-DD");
       
       question.answers = [];
       let num_answers = $('.panel.each-answer').length;
       for (var i = 0; i < num_answers; i++) {
+        let follow_up = $(".panel.each-answer").eq(i).find("select.follow_up").val();
+        if (follow_up == null) {
+          follow_up = '';
+        }
         let answer = {
           answer: $(".panel.each-answer").eq(i).find('input.answer').val(),
           correct: $(".panel.each-answer").eq(i).find("input.correct").prop('checked'),
           affirmation: $(".panel.each-answer").eq(i).find('input.affirmation').val(),
           answer_speak: $(".panel.each-answer").eq(i).find('input.answer_speak').val(),
           calculated: $(".panel.each-answer").eq(i).find("input.calculated").prop('checked'),
-          follow_up: $(".panel.each-answer").eq(i).find("select.follow_up").val(),
+          follow_up: follow_up,
           alt_answers: $(".panel.each-answer").eq(i).find('.each input').map(function(idx, elem) { return $(elem).val(); }).get()
         }
 

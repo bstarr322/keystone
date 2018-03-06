@@ -59,7 +59,7 @@ class Question extends React.Component {
       let _this = this;
       if (checkQuiz) {
         results = _.map(this.state.data.questions.data, function(question, index) {
-          return <tr key={index}><td onClick={_this.deleteQuestion.bind(_this, question._id)}>{checkQuiz && (_this.state.data.user._id == question.user_id) ? <i className="fa fa-trash-o" style={{color: 'red', cursor: 'pointer'}}></i> : null }</td><td style={{cursor: 'pointer'}}><a href={'/questions/' + question._id}>{question._id}</a></td><td className="truncate">{question.question}</td><td>{(new Date(question.date)).toLocaleDateString("en-US")}</td><td>{question.topic}</td><td>{((question.correct_answers / question.total_answers) * 100).toFixed(2) } %</td></tr>;
+          return <tr key={index}><td onClick={_this.deleteQuestion.bind(_this, question._id)}>{checkQuiz && (_this.state.data.user._id == question.user_id) ? <i className="fa fa-trash-o" style={{color: 'red', cursor: 'pointer'}}></i> : null }</td><td style={{cursor: 'pointer'}}><a href={'/questions/' + question._id}>{question._id}</a></td><td className="truncate">{question.question}</td><td>{(new Date(question.date)).toLocaleDateString("en-US")}</td><td>{question.topic}</td><td>{ (question.correct_answers == 0 && question.total_answers == 0) ? 0 : ((question.correct_answers / question.total_answers) * 100).toFixed(2) } %</td></tr>;
         });
       }
 

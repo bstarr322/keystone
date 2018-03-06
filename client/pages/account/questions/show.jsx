@@ -64,7 +64,7 @@ class ShowQuestion extends React.Component {
           </div>
           <div className="row">
             <div className="col-sm-2"><b>Date</b></div>
-            <div className="col-sm-10">{ checkQuiz ? (new Date(this.state.data.current_question.date)).toLocaleDateString("en-US") : null }</div>
+            <div className="col-sm-10">{ checkQuiz ? moment(this.state.data.current_question.date).format("YYYY--MM-DD") : null }</div>
           </div>
           <div className="row">
             <div className="col-sm-2"><b>Answers</b></div>
