@@ -42,7 +42,7 @@ const config = {
                 $filter: 'env',
                 production: process.env.MONGODB_URI,
                 test: 'mongodb://alex:password123@ds151528.mlab.com:51528/aqua-quiz',
-                $default: 'mongodb://alex:password123@ds151528.mlab.com:51528/aqua-quiz'
+                $default: process.env.MONGODB_URI
             }
         },
         autoIndex: true
