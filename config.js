@@ -41,7 +41,7 @@ const config = {
             uri: {
                 $filter: 'env',
                 production: process.env.MONGODB_URI,
-                test: 'mongodb://alex:password123@ds151528.mlab.com:51528/aqua-quiz',
+                test: process.env.MONGODB_URI,
                 $default: process.env.MONGODB_URI
             }
         },
